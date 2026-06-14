@@ -1,0 +1,42 @@
+<%# Vista: Formulario para editar un grupo %>
+
+<div class="page-header">
+  <h1 class="page-title">Editar Grupo <%= @grupo.nombre %></h1>
+  <%= link_to "← Volver", grupos_path, class: "btn-secondary" %>
+</div>
+
+<div class="form-card">
+  <%= form_with model: @grupo do |f| %>
+    <% if @grupo.errors.any? %>
+      <div class="alert alert-danger">
+        <strong>No se pudo guardar:</strong>
+        <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+          <% @grupo.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.label :nombre, "Nombre del grupo (A–L)" %>
+      <%= f.select :nombre,
+          options_for_select(%w[A B C D E F G H I J K L], @grupo.nombre),
+          { include_blank: "Seleccioná un grupo" } %>
+    </div>
+
+    <% if @grupo.selecciones.any? %>
+      <div class="alert alert-danger" style="margin-top: 0.5rem;">
+        ⚠️ Este grupo tiene <%= @grupo.selecciones.count %> selección(es) asignada(s).
+        Cambiar el nombre del grupo no las afecta, pero asegurate de que sea correcto.
+      </div>
+    <% end %>
+
+    <div class="form-actions">
+      <%= link_to "Cancelar", grupos_path, class: "btn-secondary"%>
+      <%= f.submit "Guardar cambios",
+          class: "btn-primary",
+          onclick: "return confirm('¿Guardar los cambios del Grupo #{@grupo.nombre}?')" %>
+    </div>
+  <% end %>
+</div>

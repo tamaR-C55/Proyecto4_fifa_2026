@@ -1,0 +1,64 @@
+<%# Vista: Formulario para registrar una nueva selección %>
+
+<div class="page-header">
+  <h1 class="page-title">Registrar selección</h1>
+  <%= link_to "← Volver", selecciones_path, class: "btn-secondary" %>
+</div>
+
+<div class="form-card">
+  <%= form_with model: @seleccion do |f| %>
+    <% if @seleccion.errors.any? %>
+      <div class="alert alert-danger">
+        <strong>No se pudo guardar:</strong>
+        <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+          <% @seleccion.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-row">
+      <div class="form-group">
+        <%= f.label :pais, "Nombre del país" %>
+        <%= f.text_field :pais, placeholder: "Ej: Costa Rica" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :grupo_id, "Grupo asignado" %>
+        <%= f.select :grupo_id,
+            options_from_collection_for_select(@grupos, :id, :nombre, @seleccion.grupo_id),
+            { include_blank: "Seleccioná un grupo" } %>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <%= f.label :puntos, "Puntos" %>
+        <%= f.number_field :puntos, value: 0, min: 0 %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :goles_favor, "Goles a favor" %>
+        <%= f.number_field :goles_favor, value: 0, min: 0 %>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <%= f.label :goles_contra, "Goles en contra" %>
+        <%= f.number_field :goles_contra, value: 0, min: 0 %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :diferencia_goles, "Diferencia de goles" %>
+        <%= f.number_field :diferencia_goles, value: 0 %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= link_to "Cancelar", selecciones_path, class: "btn-secondary" %>
+      <%= f.submit "Registrar selección", class: "btn-primary" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,65 @@
+<%# Vista: Lista de todas las selecciones registradas %>
+
+<div class="page-header">
+  <h1 class="page-title">Selecciones participantes</h1>
+  <%= link_to "＋ Registrar selección", new_seleccion_path, class: "btn-primary" %>
+</div>
+
+<% if @selecciones.empty? %>
+  <div class="card" style="text-align: center; padding: 3rem; color: #888;">
+    <p style="font-size: 16px;">No hay selecciones registradas aún.</p>
+    <p style="margin-top: 0.5rem;">Primero creá los grupos (A–L) y luego registrá las 48 selecciones.</p>
+    <%= link_to "Registrar primera selección", new_seleccion_path, class: "btn-primary", style: "margin-top: 1rem; display: inline-block;" %>
+  </div>
+<% else %>
+  <p style="font-size: 13px; color: #888; margin-bottom: 1rem;">
+    <%= @selecciones.count %> de 48 selecciones registradas
+  </p>
+
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>País</th>
+        <th>Grupo</th>
+        <th style="text-align: center;">Puntos</th>
+        <th style="text-align: center;">GF</th>
+        <th style="text-align: center;">GC</th>
+        <th style="text-align: center;">DG</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @selecciones.each do |seleccion| %>
+        <tr>
+          <td>
+            <span style="background:#0A1F44; color:#C9A84C; font-size:10px; font-weight:bold;
+                         padding:2px 5px; border-radius:4px; font-family:monospace; margin-right:5px;">
+              <%= seleccion.codigo %>
+            </span>
+            <strong><%= seleccion.pais %></strong>
+          </td>
+          <td>
+            <% if seleccion.grupo %>
+              <span class="badge badge-gold">Grupo <%= seleccion.grupo.nombre %></span>
+            <% else %>
+              <span class="badge badge-gray">Sin grupo</span>
+            <% end %>
+          </td>
+          <td style="text-align: center; font-weight: bold; color: #0A1F44;"><%= seleccion.puntos %></td>
+          <td style="text-align: center;"><%= seleccion.goles_favor %></td>
+          <td style="text-align: center;"><%= seleccion.goles_contra %></td>
+          <td style="text-align: center;"><%= seleccion.diferencia_goles %></td>
+          <td>
+            <div class="acciones">
+              <%= link_to "Ver", seleccion_path(seleccion), class: "btn-secondary", style: "font-size: 12px; padding: 5px 10px;" %>
+              <%= link_to "Editar", edit_seleccion_path(seleccion), class: "btn-primary", style: "font-size: 12px; padding: 5px 10px;" %>
+              <%= button_to "Eliminar", seleccion_path(seleccion), method: :delete,
+                  form: { onsubmit: "return confirm('¿Eliminar a #{seleccion.pais}? Esta acción no se puede deshacer.')" },
+                  class: "btn-danger", style: "font-size: 12px; padding: 5px 10px;" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

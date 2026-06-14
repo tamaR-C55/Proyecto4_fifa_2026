@@ -1,0 +1,53 @@
+<%# Vista: Lista de todos los grupos del torneo %>
+
+<div class="page-header">
+  <h1 class="page-title">Grupos del torneo</h1>
+  <%= link_to "＋ Nuevo grupo", new_grupo_path, class: "btn-primary" %>
+</div>
+
+<% if @grupos.empty? %>
+  <div class="card" style="text-align: center; padding: 3rem; color: #888;">
+    <p style="font-size: 16px;">No hay grupos registrados aún.</p>
+    <p style="margin-top: 0.5rem;">Empezá creando los 12 grupos del torneo (A–L).</p>
+    <%= link_to "Crear primer grupo", new_grupo_path, class: "btn-primary", style: "margin-top: 1rem; display: inline-block;" %>
+  </div>
+<% else %>
+  <div class="cards-grid">
+    <% @grupos.each do |grupo| %>
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h2 style="font-size: 18px; color: #0A1F44; font-weight: bold;">Grupo <%= grupo.nombre %></h2>
+          <span class="badge badge-gold"><%= grupo.selecciones.count %> equipos</span>
+        </div>
+
+        <% if grupo.selecciones.any? %>
+          <% grupo.selecciones.order(puntos: :desc).each do |s| %>
+            <div style="display: flex; justify-content: space-between; align-items: center;
+                        padding: 5px 0; border-bottom: 0.5px solid #eee; font-size: 13px;">
+              <span>
+                <span style="background:#0A1F44; color:#C9A84C; font-size:10px; font-weight:bold;
+                             padding:2px 5px; border-radius:4px; font-family:monospace; margin-right:5px;">
+                  <%= s.codigo %>
+                </span>
+                <%= s.pais %>
+              </span>
+              <span style="color: #0A1F44; font-weight: bold;"><%= s.puntos %> pts</span>
+            </div>
+          <% end %>
+        <% else %>
+          <p style="color: #aaa; font-size: 13px; margin: 0.5rem 0;">Sin selecciones aún</p>
+        <% end %>
+
+        <div style="display: flex; gap: 8px; margin-top: 1rem;">
+          <%= link_to "Ver", grupo_path(grupo), class: "btn-primary", style: "font-size: 12px; padding: 6px 12px;" %>
+          <%= link_to "Editar", edit_grupo_path(grupo), class: "btn-secondary", style: "font-size: 12px; padding: 6px 12px;" %>
+          <%= button_to "Eliminar", grupo_path(grupo), method: :delete,
+              form: { onsubmit: grupo.selecciones.any? ?
+                "return confirm('⚠️ Este grupo tiene #{grupo.selecciones.count} selección(es). ¿Estás segura de que querés eliminar el Grupo #{grupo.nombre} y todas sus selecciones?')" :
+                "return confirm('¿Eliminar el Grupo #{grupo.nombre}? Esta acción no se puede deshacer.')" },
+              class: "btn-danger", style: "font-size: 12px; padding: 6px 12px;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

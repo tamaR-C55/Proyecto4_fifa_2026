@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pais: MyString
+  puntos: 1
+  goles_favor: 1
+  goles_contra: 1
+  diferencia_goles: 1
+  grupo: one
+
+two:
+  pais: MyString
+  puntos: 1
+  goles_favor: 1
+  goles_contra: 1
+  diferencia_goles: 1
+  grupo: two

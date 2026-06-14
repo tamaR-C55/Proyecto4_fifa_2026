@@ -1,0 +1,54 @@
+<%# Vista: Detalle de una selección %>
+
+<div class="page-header">
+  <h1 class="page-title">
+    <span style="background:#0A1F44; color:#C9A84C; font-size:14px; font-weight:bold;
+                 padding:3px 8px; border-radius:4px; font-family:monospace; margin-right:8px;">
+      <%= @seleccion.codigo %>
+    </span>
+    <%= @seleccion.pais %>
+  </h1>
+  <div style="display: flex; gap: 8px;">
+    <%= link_to "Editar", edit_seleccion_path(@seleccion), class: "btn-primary" %>
+    <%= link_to "← Volver", selecciones_path, class: "btn-secondary" %>
+  </div>
+</div>
+
+<div class="card" style="max-width: 500px;">
+  <table style="width: 100%; font-size: 15px;">
+    <tr style="border-bottom: 0.5px solid #eee;">
+      <td style="padding: 10px 0; color: #888; width: 50%;">País</td>
+      <td style="padding: 10px 0; font-weight: bold; color: #0A1F44;"><%= @seleccion.pais %></td>
+    </tr>
+    <tr style="border-bottom: 0.5px solid #eee;">
+      <td style="padding: 10px 0; color: #888;">Grupo</td>
+      <td style="padding: 10px 0;">
+        <% if @seleccion.grupo %>
+          <%= link_to "Grupo #{@seleccion.grupo.nombre}", grupo_path(@seleccion.grupo),
+              style: "color: #0A1F44; font-weight: bold;" %>
+        <% else %>
+          <span style="color: #aaa;">Sin grupo asignado</span>
+        <% end %>
+      </td>
+    </tr>
+    <tr style="border-bottom: 0.5px solid #eee;">
+      <td style="padding: 10px 0; color: #888;">Puntos</td>
+      <td style="padding: 10px 0; font-weight: bold; font-size: 18px; color: #C9A84C;"><%= @seleccion.puntos %></td>
+    </tr>
+    <tr style="border-bottom: 0.5px solid #eee;">
+      <td style="padding: 10px 0; color: #888;">Goles a favor</td>
+      <td style="padding: 10px 0;"><%= @seleccion.goles_favor %></td>
+    </tr>
+    <tr style="border-bottom: 0.5px solid #eee;">
+      <td style="padding: 10px 0; color: #888;">Goles en contra</td>
+      <td style="padding: 10px 0;"><%= @seleccion.goles_contra %></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 0; color: #888;">Diferencia de goles</td>
+      <td style="padding: 10px 0; font-weight: bold;
+          color: <%= @seleccion.diferencia_goles >= 0 ? '#1e8449' : '#c0392b' %>;">
+        <%= @seleccion.diferencia_goles >= 0 ? "+" : "" %><%= @seleccion.diferencia_goles %>
+      </td>
+    </tr>
+  </table>
+</div>
