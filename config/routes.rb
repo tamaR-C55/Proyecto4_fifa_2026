@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       post :generar
     end
   end
+  get "clasificaciones", to: "clasificaciones#index"
 
   root "grupos#index"
 end

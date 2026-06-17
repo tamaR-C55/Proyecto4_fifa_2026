@@ -1,0 +1,75 @@
+<div class="page-header">
+  <h1 class="page-title">
+    Clasificación Mundial FIFA 2026
+  </h1>
+</div>
+
+<div class="card" style="margin-bottom:20px;">
+  <div style="display:flex; gap:20px; flex-wrap:wrap;">
+
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="width:12px; height:12px; background:#2ecc71; border-radius:2px;"></div>
+      <span>Clasificación directa (1° y 2°)</span>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="width:12px; height:12px; background:#3498db; border-radius:2px;"></div>
+      <span>Mejor tercer lugar</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="cards-grid">
+
+  <% @grupos.each do |grupo| %>
+
+    <div class="card">
+
+      <h3 style="
+        color:#0A1F44;
+        margin-bottom:12px;
+        text-align:center;
+      ">
+        Grupo <%= grupo.nombre %>
+      </h3>
+
+      <% @clasificaciones[grupo.id].each_with_index do |equipo, posicion| %>
+
+        <% color = nil %>
+
+        <% if posicion < 2 %>
+          <% color = "#2ecc71" %>
+        <% elsif @ids_mejores_terceros.include?(equipo.id) %>
+          <% color = "#3498db" %>
+        <% end %>
+
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          padding:8px;
+          margin-bottom:6px;
+          border-left: <%= color ? "5px solid #{color}" : "5px solid transparent" %>;
+          background:#fafafa;
+          border-radius:4px;
+        ">
+
+          <span>
+            <strong><%= posicion + 1 %>.</strong>
+            <%= equipo.pais %>
+          </span>
+
+          <strong>
+            <%= equipo.puntos %> pts
+          </strong>
+
+        </div>
+
+      <% end %>
+
+    </div>
+
+  <% end %>
+
+</div>
