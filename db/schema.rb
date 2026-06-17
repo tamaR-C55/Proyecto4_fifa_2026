@@ -10,11 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_06_14_050253) do
+ActiveRecord::Schema[7.1].define(version: 2026_06_17_015506) do
   create_table "grupos", force: :cascade do |t|
     t.string "nombre"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "partidos", force: :cascade do |t|
+    t.integer "grupo_id", null: false
+    t.integer "seleccion_a_id", null: false
+    t.integer "seleccion_b_id", null: false
+    t.integer "goles_a", default: 0
+    t.integer "goles_b", default: 0
+    t.boolean "jugado", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grupo_id"], name: "index_partidos_on_grupo_id"
   end
 
   create_table "seleccions", force: :cascade do |t|
@@ -29,5 +41,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_14_050253) do
     t.index ["grupo_id"], name: "index_seleccions_on_grupo_id"
   end
 
+  add_foreign_key "partidos", "grupos"
   add_foreign_key "seleccions", "grupos"
 end

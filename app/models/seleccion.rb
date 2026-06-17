@@ -3,10 +3,20 @@ class Seleccion < ApplicationRecord
   self.table_name = "seleccions"
 
   belongs_to :grupo
+  has_many :partidos_como_a,
+         class_name: "Partido",
+         foreign_key: "seleccion_a_id"
+
+  has_many :partidos_como_b,
+         class_name: "Partido",
+         foreign_key: "seleccion_b_id"
 
   validates :pais, presence: true, uniqueness: true
-  validates :puntos, :goles_favor, :goles_contra, :diferencia_goles,
-            numericality: { greater_than_or_equal_to: 0 }
+  validates :puntos, :goles_favor, :goles_contra,
+          numericality: { greater_than_or_equal_to: 0 }
+
+  validates :diferencia_goles,
+          numericality: true
 
   # Códigos ISO de país para mostrar como badge
   CODIGOS = {
@@ -36,4 +46,43 @@ class Seleccion < ApplicationRecord
   def codigo
     CODIGOS[pais] || pais&.upcase&.first(3) || "???"
   end
+
+  def recalcular_estadisticas
+  puntos_calculados = 0
+  goles_favor_calculados = 0
+  goles_contra_calculados = 0
+
+  partidos_jugados = Partido.where(jugado: true)
+                            .where(
+                              "seleccion_a_id = ? OR seleccion_b_id = ?",
+                              id, id
+                            )
+
+  partidos_jugados.each do |partido|
+
+    if partido.seleccion_a_id == id
+      goles_mios = partido.goles_a
+      goles_rival = partido.goles_b
+    else
+      goles_mios = partido.goles_b
+      goles_rival = partido.goles_a
+    end
+
+    goles_favor_calculados += goles_mios
+    goles_contra_calculados += goles_rival
+
+    if goles_mios > goles_rival
+      puntos_calculados += 3
+    elsif goles_mios == goles_rival
+      puntos_calculados += 1
+    end
+  end
+
+  update!(
+    puntos: puntos_calculados,
+    goles_favor: goles_favor_calculados,
+    goles_contra: goles_contra_calculados,
+    diferencia_goles: goles_favor_calculados - goles_contra_calculados
+  )
+end
 end

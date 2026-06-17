@@ -1,0 +1,66 @@
+<div class="page-header">
+  <h1 class="page-title">
+    <% if @partido.jugado %>
+      Editar Resultado
+    <% else %>
+      Registrar Resultado
+    <% end %>
+  </h1>
+</div>
+
+<div class="card">
+
+  <div style="text-align:center; margin-bottom:2rem;">
+    <h2 style="color:#0A1F44;">
+      <%= @partido.seleccion_a.pais %>
+      vs
+      <%= @partido.seleccion_b.pais %>
+    </h2>
+  </div>
+
+  <%= form_with model: @partido do |f| %>
+
+    <div style="display:flex; gap:2rem; justify-content:center; margin-bottom:2rem;">
+
+      <div style="text-align:center;">
+        <h3 style="margin-bottom:0.5rem;">
+          <%= @partido.seleccion_a.pais %>
+        </h3>
+
+        <%= f.number_field :goles_a,
+              min: 0,
+              class: "form-control",
+              style: "width:100px; text-align:center; font-size:18px;" %>
+      </div>
+
+      <div style="display:flex; align-items:center;">
+        <strong style="font-size:24px;">-</strong>
+      </div>
+
+      <div style="text-align:center;">
+        <h3 style="margin-bottom:0.5rem;">
+          <%= @partido.seleccion_b.pais %>
+        </h3>
+
+        <%= f.number_field :goles_b,
+              min: 0,
+              class: "form-control",
+              style: "width:100px; text-align:center; font-size:18px;" %>
+      </div>
+
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:center;">
+
+      <%= f.submit "Guardar Resultado",
+            class: "btn-primary" %>
+
+      <%= link_to "Cancelar",
+            partidos_path(grupo_id: @partido.grupo_id),
+            class: "btn-secondary" %>
+
+    </div>
+
+  <% end %>
+
+</div>
