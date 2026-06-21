@@ -18,6 +18,7 @@ class Seleccion < ApplicationRecord
   validates :diferencia_goles,
           numericality: true
 
+  validate :limite_de_equipos_por_grupo
   # Códigos ISO de país para mostrar como badge
   CODIGOS = {
     "Argentina" => "ARG", "Brasil" => "BRA", "México" => "MEX",
@@ -84,5 +85,16 @@ class Seleccion < ApplicationRecord
     goles_contra: goles_contra_calculados,
     diferencia_goles: goles_favor_calculados - goles_contra_calculados
   )
-end
+  end
+  private
+  def limite_de_equipos_por_grupo
+    return unless grupo_id.present?
+
+    query = Seleccion.where(grupo_id: grupo_id)
+    query = query.where.not(id: id) if persisted?
+
+    if query.count >= 4
+      errors.add(:grupo_id, "ya tiene 4 selecciones. Cada grupo puede tener máximo 4 equipos.")
+    end
+  end
 end
