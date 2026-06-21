@@ -17,9 +17,8 @@ class SeleccionesController < ApplicationController
   def create
     @seleccion = Seleccion.new(seleccion_params)
     if @seleccion.save
-      # Redirigir al grupo si viene de ahí
       if @seleccion.grupo
-        redirect_to grupo_path(@seleccion.grupo), notice: "#{@seleccion.bandera} #{@seleccion.pais} registrada en el Grupo #{@seleccion.grupo.nombre}."
+        redirect_to grupo_path(@seleccion.grupo), notice: "#{@seleccion.codigo} #{@seleccion.pais} registrada en el Grupo #{@seleccion.grupo.nombre}."
       else
         redirect_to @seleccion, notice: "Selección registrada exitosamente."
       end
@@ -29,15 +28,10 @@ class SeleccionesController < ApplicationController
     end
   end
 
-  def edit
-    @grupos = Grupo.all.order(:nombre)
-  end
-
   def update
     if @seleccion.update(seleccion_params)
-      # Redirigir al grupo si tiene uno asignado
       if @seleccion.grupo
-        redirect_to grupo_path(@seleccion.grupo), notice: "#{@seleccion.bandera} #{@seleccion.pais} actualizada."
+        redirect_to grupo_path(@seleccion.grupo), notice: "#{@seleccion.codigo} #{@seleccion.pais} actualizada."
       else
         redirect_to @seleccion, notice: "Selección actualizada."
       end
@@ -50,14 +44,13 @@ class SeleccionesController < ApplicationController
   def destroy
     grupo = @seleccion.grupo
     nombre = @seleccion.pais
-    bandera = @seleccion.bandera
+    codigo = @seleccion.codigo
     @seleccion.destroy
 
-    # Redirigir al grupo si tenía uno, si no a la lista general
     if grupo
-      redirect_to grupo_path(grupo), notice: "#{bandera} #{nombre} eliminada del Grupo #{grupo.nombre}."
+      redirect_to grupo_path(grupo), notice: "#{codigo} #{nombre} eliminada del Grupo #{grupo.nombre}."
     else
-      redirect_to selecciones_path, notice: "#{bandera} #{nombre} eliminada."
+      redirect_to selecciones_path, notice: "#{codigo} #{nombre} eliminada."
     end
   end
 
