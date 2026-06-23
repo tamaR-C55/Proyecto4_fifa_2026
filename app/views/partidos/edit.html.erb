@@ -50,14 +50,58 @@
 
     </div>
 
+    <% if @partido.eliminatoria? %>
+
+      <div style="text-align:center; color:#666; font-size:13px; margin-bottom:1rem;">
+        Si el partido termina empatado, registra también los penales.
+      </div>
+
+      <div style="display:flex; gap:2rem; justify-content:center; margin-bottom:2rem;">
+
+        <div style="text-align:center;">
+          <h3 style="margin-bottom:0.5rem;">
+            Penales <%= @partido.seleccion_a.pais %>
+          </h3>
+
+          <%= f.number_field :penales_a,
+                min: 0,
+                class: "form-control",
+                style: "width:100px; text-align:center; font-size:18px;" %>
+        </div>
+
+        <div style="display:flex; align-items:center;">
+          <strong style="font-size:24px;">-</strong>
+        </div>
+
+        <div style="text-align:center;">
+          <h3 style="margin-bottom:0.5rem;">
+            Penales <%= @partido.seleccion_b.pais %>
+          </h3>
+
+          <%= f.number_field :penales_b,
+                min: 0,
+                class: "form-control",
+                style: "width:100px; text-align:center; font-size:18px;" %>
+        </div>
+
+      </div>
+
+    <% end %>
+
     <div style="display:flex; gap:10px; justify-content:center;">
 
       <%= f.submit "Guardar Resultado",
             class: "btn-primary" %>
 
-      <%= link_to "Cancelar",
-            partidos_path(grupo_id: @partido.grupo_id),
-            class: "btn-secondary" %>
+      <% if @partido.eliminatoria? %>
+        <%= link_to "Cancelar",
+              partidos_path(fase: "eliminatoria"),
+              class: "btn-secondary" %>
+      <% else %>
+        <%= link_to "Cancelar",
+              partidos_path(grupo_id: @partido.grupo_id),
+              class: "btn-secondary" %>
+      <% end %>
 
     </div>
 

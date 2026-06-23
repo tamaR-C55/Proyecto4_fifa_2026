@@ -19,6 +19,14 @@ class Seleccion < ApplicationRecord
           numericality: true
 
   validate :limite_de_equipos_por_grupo
+
+  scope :ordenadas_por_clasificacion, -> do
+    order(
+      puntos: :desc,
+      diferencia_goles: :desc,
+      goles_favor: :desc
+    )
+  end
   # Códigos ISO de país para mostrar como badge
   CODIGOS = {
     "Argentina" => "ARG", "Brasil" => "BRA", "México" => "MEX",
@@ -53,7 +61,7 @@ class Seleccion < ApplicationRecord
   goles_favor_calculados = 0
   goles_contra_calculados = 0
 
-  partidos_jugados = Partido.where(jugado: true)
+  partidos_jugados = Partido.where(jugado: true, fase: "grupos")
                             .where(
                               "seleccion_a_id = ? OR seleccion_b_id = ?",
                               id, id
@@ -85,6 +93,41 @@ class Seleccion < ApplicationRecord
     goles_contra: goles_contra_calculados,
     diferencia_goles: goles_favor_calculados - goles_contra_calculados
   )
+  end
+
+  def self.clasificacion_mundial
+    grupos = Grupo.includes(:selecciones).order(:nombre)
+    clasificaciones = {}
+    terceros = []
+
+    grupos.each do |grupo|
+      tabla = grupo.selecciones.ordenadas_por_clasificacion
+      clasificaciones[grupo.id] = tabla
+      terceros << tabla[2] if tabla.size >= 3
+    end
+
+    mejores_terceros = terceros.sort_by do |equipo|
+      [
+        -equipo.puntos,
+        -equipo.diferencia_goles,
+        -equipo.goles_favor
+      ]
+    end.first(8)
+
+    [grupos, clasificaciones, mejores_terceros]
+  end
+
+  def self.clasificados_para_eliminatoria
+    grupos, clasificaciones, mejores_terceros = clasificacion_mundial
+    clasificados = []
+
+    grupos.each do |grupo|
+      tabla = clasificaciones[grupo.id]
+      clasificados << tabla[0] if tabla[0]
+      clasificados << tabla[1] if tabla[1]
+    end
+
+    clasificados + mejores_terceros
   end
   private
   def limite_de_equipos_por_grupo

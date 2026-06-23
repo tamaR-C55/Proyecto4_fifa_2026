@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :partidos do
     collection do
       post :generar
+      post :generar_eliminatoria
     end
   end
   get "clasificaciones", to: "clasificaciones#index"

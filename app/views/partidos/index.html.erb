@@ -2,31 +2,129 @@
   <h1 class="page-title">Registro de Resultados</h1>
 </div>
 
-<div class="card">
-  <h2 style="margin-bottom: 1rem;">Seleccionar Grupo</h2>
+<div class="card" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+  <div>
+    <strong>Vista actual:</strong>
+    <%= @fase == "eliminatoria" ? "Fase eliminatoria" : "Fase de grupos" %>
+  </div>
 
-  <%= form_with url: partidos_path,
-                method: :get,
-                local: true do %>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <%= link_to "Fase de grupos",
+          partidos_path(fase: "grupos"),
+          class: @fase == "grupos" ? "btn-primary" : "btn-secondary" %>
 
-    <div style="display:flex; gap:10px; align-items:center;">
-      <%= select_tag :grupo_id,
-          options_from_collection_for_select(
-            @grupos,
-            :id,
-            :nombre,
-            params[:grupo_id]
-          ),
-          style: "padding:8px; min-width:200px;" %>
-
-      <%= submit_tag "Buscar",
-            class: "btn-primary" %>
-    </div>
-
-  <% end %>
+    <%= link_to "Eliminación directa",
+          partidos_path(fase: "eliminatoria"),
+          class: @fase == "eliminatoria" ? "btn-primary" : "btn-secondary" %>
+  </div>
 </div>
 
-<% if @grupo %>
+<% if @fase == "eliminatoria" %>
+
+  <div class="card" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    <div>
+      <h2 style="margin-bottom: 0.25rem;">Llave eliminatoria</h2>
+      <p style="color: #666; font-size: 13px;">Dieciseisavos → octavos → cuartos → semis → tercer lugar → final</p>
+    </div>
+
+    <% if @partidos.empty? %>
+      <%= button_to "Generar eliminatoria",
+            generar_eliminatoria_partidos_path,
+            method: :post,
+            class: "btn-primary" %>
+    <% else %>
+      <%= link_to "Ver clasificación",
+            clasificaciones_path,
+            class: "btn-secondary" %>
+    <% end %>
+  </div>
+
+  <% if @partidos.empty? %>
+
+    <div class="card" style="text-align: center; color: #777; padding: 2rem;">
+      <p>Aún no se generó la fase eliminatoria.</p>
+      <p style="margin-top: 0.5rem;">Cuando tengas 32 clasificados, podrás crear la llave desde este botón.</p>
+    </div>
+
+  <% else %>
+
+    <% Partido::RONDAS_ELIMINATORIA.each do |ronda| %>
+
+      <% partidos_ronda = @partidos_por_ronda[ronda] || [] %>
+      <% next if partidos_ronda.empty? %>
+
+      <div class="card" style="margin-bottom: 1rem;">
+        <h2 style="color: #0A1F44; margin-bottom: 1rem;"><%= etiqueta_ronda(ronda) %></h2>
+
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Partido</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% partidos_ronda.each do |partido| %>
+              <tr>
+                <td>
+                  <strong>
+                    <%= partido.seleccion_a.pais %>
+                    <%= formato_marcador(partido) %>
+                    <%= partido.seleccion_b.pais %>
+                  </strong>
+                </td>
+
+                <td>
+                  <% if partido.jugado %>
+                    <span class="badge badge-gold">Jugado</span>
+                  <% else %>
+                    <span class="badge badge-blue">Pendiente</span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= link_to "Registrar",
+                        edit_partido_path(partido),
+                        class: partido.jugado ? "btn-secondary" : "btn-primary",
+                        style: "width: 100px; text-align: center;" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    <% end %>
+
+  <% end %>
+
+<% elsif @grupo %>
+
+  <div class="card" style="margin-bottom: 1rem;">
+    <h2 style="margin-bottom: 1rem;">Seleccionar Grupo</h2>
+
+    <%= form_with url: partidos_path,
+                  method: :get,
+                  local: true do %>
+
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+        <%= select_tag :grupo_id,
+            options_from_collection_for_select(
+              @grupos,
+              :id,
+              :nombre,
+              params[:grupo_id]
+            ),
+            style: "padding:8px; min-width:200px;" %>
+
+        <%= submit_tag "Buscar",
+              class: "btn-primary" %>
+      </div>
+
+    <% end %>
+  </div>
 
   <div class="card">
 
@@ -137,6 +235,34 @@
 
     <% end %>
 
+  </div>
+
+<% else %>
+
+  <div class="card">
+    <h2 style="margin-bottom: 1rem;">Seleccionar Grupo</h2>
+
+    <%= form_with url: partidos_path,
+                  method: :get,
+                  local: true do %>
+
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+        <%= select_tag :grupo_id,
+            options_from_collection_for_select(
+              @grupos,
+              :id,
+              :nombre,
+              params[:grupo_id]
+            ),
+            style: "padding:8px; min-width:200px;" %>
+
+        <%= submit_tag "Buscar",
+              class: "btn-primary" %>
+      </div>
+
+    <% end %>
+
+    <p style="color:#777; margin-top: 1rem;">Elegí un grupo para ver y registrar los partidos de la fase de grupos.</p>
   </div>
 
 <% end %>

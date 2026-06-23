@@ -3,8 +3,12 @@ class PartidosController < ApplicationController
 
   def index
     @grupos = Grupo.order(:nombre)
+    @fase = params[:fase].in?(%w[grupos eliminatoria]) ? params[:fase] : "grupos"
 
-    if params[:grupo_id].present?
+    if @fase == "eliminatoria"
+      @partidos = Partido.eliminatoria.includes(:seleccion_a, :seleccion_b).order(:ronda, :orden, :id)
+      @partidos_por_ronda = @partidos.group_by(&:ronda)
+    elsif params[:grupo_id].present?
       @grupo = Grupo.find(params[:grupo_id])
       @partidos = @grupo.partidos.includes(:seleccion_a, :seleccion_b)
     else
@@ -34,19 +38,24 @@ class PartidosController < ApplicationController
   end
 
   def update
-    datos = partido_params
-
-    datos[:jugado] = true
+    datos = partido_params.merge(jugado: true)
 
     if @partido.update(datos)
 
       @partido.seleccion_a.recalcular_estadisticas
       @partido.seleccion_b.recalcular_estadisticas
 
-      redirect_to partidos_path(
-        grupo_id: @partido.grupo_id
-      ),
-      notice: "Resultado registrado correctamente."
+      @partido.procesar_avance_eliminatoria! if @partido.eliminatoria?
+
+      if @partido.eliminatoria?
+        redirect_to partidos_path(fase: "eliminatoria"),
+                    notice: "Resultado registrado correctamente."
+      else
+        redirect_to partidos_path(
+          grupo_id: @partido.grupo_id
+        ),
+        notice: "Resultado registrado correctamente."
+      end
 
     else
       render :edit, status: :unprocessable_entity
@@ -71,6 +80,16 @@ class PartidosController < ApplicationController
             notice: "Partidos generados correctamente para el Grupo #{grupo.nombre}."
    end
 
+    def generar_eliminatoria
+      if Partido.generar_eliminatoria!
+        redirect_to partidos_path(fase: "eliminatoria"),
+                    notice: "Fase de eliminación directa generada correctamente."
+      else
+        redirect_to clasificaciones_path,
+                    alert: "Necesitas 32 selecciones clasificadas para generar la fase eliminatoria."
+      end
+    end
+
   private
 
   def set_partido
@@ -80,7 +99,9 @@ class PartidosController < ApplicationController
   def partido_params
     params.require(:partido).permit(
       :goles_a,
-      :goles_b
+      :goles_b,
+      :penales_a,
+      :penales_b
     )
   end
 end

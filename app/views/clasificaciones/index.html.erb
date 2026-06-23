@@ -4,6 +4,19 @@
   </h1>
 </div>
 
+<div class="card" style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+  <div>
+    <strong>Fase de grupos completada:</strong>
+    <span style="color:#666;">los dos primeros de cada grupo y los 8 mejores terceros avanzan a eliminación directa.</span>
+  </div>
+
+  <% if Partido.eliminatoria.exists? %>
+    <%= link_to "Ver llave eliminatoria", partidos_path(fase: "eliminatoria"), class: "btn-primary" %>
+  <% else %>
+    <%= button_to "Generar llave eliminatoria", generar_eliminatoria_partidos_path, method: :post, class: "btn-primary" %>
+  <% end %>
+</div>
+
 <div class="card" style="margin-bottom:20px;">
   <div style="display:flex; gap:20px; flex-wrap:wrap;">
 

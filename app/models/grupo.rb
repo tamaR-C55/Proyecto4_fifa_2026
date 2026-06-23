@@ -14,6 +14,7 @@ class Grupo < ApplicationRecord
 
   equipos.combination(2).each do |equipo_a, equipo_b|
     partidos.create!(
+      fase: "grupos",
       seleccion_a_id: equipo_a.id,
       seleccion_b_id: equipo_b.id
     )
