@@ -1,0 +1,142 @@
+<div class="page-header">
+  <h1 class="page-title">Resultados Finales</h1>
+</div>
+
+<% if @podio.nil? %>
+
+  <div class="card" style="text-align:center; padding:3rem;">
+
+    <div style="font-size:60px;"></div>
+
+    <h2 style="color:#0A1F44; margin-top:15px;">
+      El torneo aún no ha finalizado
+    </h2>
+
+    <p style="margin-top:10px; color:#666;">
+      Deben completarse la Final y el partido por el tercer lugar para conocer el podio.
+    </p>
+
+  </div>
+
+<% else %>
+
+  <div class="card" style="text-align:center; margin-bottom:25px;">
+
+      <div style="font-size:70px;"></div>
+
+      <h2 style="color:#0A1F44;">
+        Campeón del Mundial
+      </h2>
+
+      <div style="margin-top:15px;">
+
+        <span style="
+            background:#0A1F44;
+            color:#C9A84C;
+            padding:4px 10px;
+            border-radius:6px;
+            font-family:monospace;
+            font-weight:bold;">
+          <%= @podio[:campeon].codigo %>
+        </span>
+
+      </div>
+
+      <h1 style="margin-top:15px;">
+        <%= @podio[:campeon].pais %>
+      </h1>
+
+  </div>
+
+  <div class="cards-grid">
+
+      <div class="card" style="text-align:center;">
+
+          <div style="font-size:50px;"></div>
+
+          <h3>Subcampeón</h3>
+
+          <p style="margin-top:15px;">
+
+              <span class="badge badge-gold">
+                  <%= @podio[:subcampeon].codigo %>
+              </span>
+
+          </p>
+
+          <strong>
+              <%= @podio[:subcampeon].pais %>
+          </strong>
+
+      </div>
+
+      <div class="card" style="text-align:center;">
+
+          <div style="font-size:50px;"></div>
+
+          <h3>Tercer Lugar</h3>
+
+          <p style="margin-top:15px;">
+
+              <span class="badge badge-gold">
+                  <%= @podio[:tercer_lugar].codigo %>
+              </span>
+
+          </p>
+
+          <strong>
+              <%= @podio[:tercer_lugar].pais %>
+          </strong>
+
+      </div>
+
+  </div>
+
+  <table class="tabla" style="margin-top:30px;">
+
+      <thead>
+
+          <tr>
+              <th>Puesto</th>
+              <th>Selección</th>
+          </tr>
+
+      </thead>
+
+      <tbody>
+
+          <tr>
+
+              <td> Campeón</td>
+
+              <td>
+                  <%= @podio[:campeon].pais %>
+              </td>
+
+          </tr>
+
+          <tr>
+
+              <td> Subcampeón</td>
+
+              <td>
+                  <%= @podio[:subcampeon].pais %>
+              </td>
+
+          </tr>
+
+          <tr>
+
+              <td> Tercer Lugar</td>
+
+              <td>
+                  <%= @podio[:tercer_lugar].pais %>
+              </td>
+
+          </tr>
+
+      </tbody>
+
+  </table>
+
+<% end %>

@@ -178,4 +178,26 @@ class Partido < ApplicationRecord
 
     RONDAS_ELIMINATORIA[index + 1]
   end
+
+  def self.podio
+    final = find_by(
+      fase: "eliminatoria",
+      ronda: "final",
+      jugado: true
+    )
+
+    tercer = find_by(
+      fase: "eliminatoria",
+      ronda: "tercer_lugar",
+      jugado: true
+    )
+
+    return nil unless final && tercer
+
+    {
+      campeon: final.ganador,
+      subcampeon: final.perdedor,
+      tercer_lugar: tercer.ganador
+    }
+  end
 end

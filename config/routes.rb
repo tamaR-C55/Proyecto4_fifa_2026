@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   resources :grupos
   resources :selecciones
 
+  resources :resultados, only: [:index]
+
   resources :partidos do
     collection do
       post :generar

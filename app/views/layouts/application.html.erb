@@ -248,14 +248,13 @@
         <span class="navbar-title">Copa Mundial de Fútbol</span>
       </a>
       <div class="navbar-links">
+        
         <%= link_to "Grupos", grupos_path, class: controller_name == "grupos" ? "active" : "" %>
         <%= link_to "Selecciones", selecciones_path, class: controller_name == "selecciones" ? "active" : "" %>
-        <%= link_to "Registrar Partidos",
-        partidos_path,
-        class: controller_name == "partidos" ? "active" : "" %>
-        <%= link_to "Clasificación",
-      clasificaciones_path,
-      class: controller_name == "clasificaciones" ? "active" : "" %>
+        <%= link_to "Registrar Partidos", partidos_path, class: controller_name == "partidos" ? "active" : "" %>
+        <%= link_to "Clasificación", clasificaciones_path, class: controller_name == "clasificaciones" ? "active" : "" %>
+        <%= link_to "Resultados", resultados_path, class: controller_name == "resultados" ? "active" : "" %>
+
       </div>
     </nav>
 
