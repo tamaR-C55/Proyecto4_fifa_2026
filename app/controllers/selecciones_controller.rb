@@ -8,6 +8,11 @@ class SeleccionesController < ApplicationController
   def show
   end
 
+
+  def edit
+    @grupos = Grupo.all.order(:nombre)
+  end
+
   def new
     @seleccion = Seleccion.new
     @seleccion.grupo_id = params[:grupo_id] if params[:grupo_id]
