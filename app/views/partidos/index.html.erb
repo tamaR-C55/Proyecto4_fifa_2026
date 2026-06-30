@@ -33,9 +33,17 @@
             method: :post,
             class: "btn-primary" %>
     <% else %>
-      <%= link_to "Ver clasificación",
-            clasificaciones_path,
-            class: "btn-secondary" %>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <%= link_to "Ver clasificación",
+          clasificaciones_path,
+          class: "btn-secondary" %>
+
+        <%= button_to "Reiniciar eliminatoria",
+          reiniciar_eliminatoria_partidos_path,
+          method: :post,
+          data: { turbo_confirm: "Se borrará toda la llave eliminatoria. ¿Quieres continuar?" },
+          class: "btn-secondary" %>
+      </div>
     <% end %>
   </div>
 
@@ -70,9 +78,9 @@
               <tr>
                 <td>
                   <strong>
-                    <%= partido.seleccion_a.pais %>
+                    <%= nombre_seleccion(partido, :a) %>
                     <%= formato_marcador(partido) %>
-                    <%= partido.seleccion_b.pais %>
+                    <%= nombre_seleccion(partido, :b) %>
                   </strong>
                 </td>
 
@@ -171,18 +179,18 @@
                 <% if partido.jugado %>
 
                   <strong>
-                    <%= partido.seleccion_a.pais %>
+                    <%= nombre_seleccion(partido, :a) %>
                     <%= partido.goles_a %>
                     -
                     <%= partido.goles_b %>
-                    <%= partido.seleccion_b.pais %>
+                    <%= nombre_seleccion(partido, :b) %>
                   </strong>
 
                 <% else %>
 
-                  <%= partido.seleccion_a.pais %>
+                  <%= nombre_seleccion(partido, :a) %>
                   vs
-                  <%= partido.seleccion_b.pais %>
+                  <%= nombre_seleccion(partido, :b) %>
 
                 <% end %>
 

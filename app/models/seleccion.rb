@@ -5,11 +5,13 @@ class Seleccion < ApplicationRecord
   belongs_to :grupo
   has_many :partidos_como_a,
          class_name: "Partido",
-         foreign_key: "seleccion_a_id"
+      foreign_key: "seleccion_a_id",
+      dependent: :destroy
 
   has_many :partidos_como_b,
          class_name: "Partido",
-         foreign_key: "seleccion_b_id"
+      foreign_key: "seleccion_b_id",
+      dependent: :destroy
 
   validates :pais, presence: true, uniqueness: true
   validates :puntos, :goles_favor, :goles_contra,

@@ -40,6 +40,12 @@ class PartidosController < ApplicationController
   def update
     datos = partido_params.merge(jugado: true)
 
+    unless @partido.seleccion_a && @partido.seleccion_b
+      redirect_to partidos_path(fase: @partido.fase),
+                  alert: "Este partido ya no tiene selecciones asociadas."
+      return
+    end
+
     if @partido.update(datos)
 
       @partido.seleccion_a.recalcular_estadisticas
@@ -88,6 +94,13 @@ class PartidosController < ApplicationController
         redirect_to clasificaciones_path,
                     alert: "Necesitas 32 selecciones clasificadas para generar la fase eliminatoria."
       end
+    end
+
+    def reiniciar_eliminatoria
+      Partido.reiniciar_eliminatoria!
+
+      redirect_to clasificaciones_path,
+                  notice: "La llave eliminatoria fue reiniciada correctamente."
     end
 
   private

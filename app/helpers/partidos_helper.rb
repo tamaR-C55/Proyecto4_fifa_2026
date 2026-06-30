@@ -3,6 +3,10 @@ module PartidosHelper
 		partido.marcador
 	end
 
+	def nombre_seleccion(partido, lado)
+		partido.public_send("seleccion_#{lado}")&.pais || "Selección eliminada"
+	end
+
 	def etiqueta_ronda(ronda)
 		{
 			"dieciseisavos" => "Dieciseisavos de final",

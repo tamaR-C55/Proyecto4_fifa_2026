@@ -10,11 +10,18 @@
     <span style="color:#666;">los dos primeros de cada grupo y los 8 mejores terceros avanzan a eliminación directa.</span>
   </div>
 
-  <% if Partido.eliminatoria.exists? %>
-    <%= link_to "Ver llave eliminatoria", partidos_path(fase: "eliminatoria"), class: "btn-primary" %>
-  <% else %>
-    <%= button_to "Generar llave eliminatoria", generar_eliminatoria_partidos_path, method: :post, class: "btn-primary" %>
-  <% end %>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <% if Partido.eliminatoria.exists? %>
+      <%= link_to "Ver llave eliminatoria", partidos_path(fase: "eliminatoria"), class: "btn-primary" %>
+      <%= button_to "Reiniciar eliminatoria",
+            reiniciar_eliminatoria_partidos_path,
+            method: :post,
+            data: { turbo_confirm: "Se borrará toda la llave eliminatoria. ¿Quieres continuar?" },
+            class: "btn-secondary" %>
+    <% else %>
+      <%= button_to "Generar llave eliminatoria", generar_eliminatoria_partidos_path, method: :post, class: "btn-primary" %>
+    <% end %>
+  </div>
 </div>
 
 <div class="card" style="margin-bottom:20px;">

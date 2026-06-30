@@ -12,9 +12,9 @@
 
   <div style="text-align:center; margin-bottom:2rem;">
     <h2 style="color:#0A1F44;">
-      <%= @partido.seleccion_a.pais %>
+      <%= nombre_seleccion(@partido, :a) %>
       vs
-      <%= @partido.seleccion_b.pais %>
+      <%= nombre_seleccion(@partido, :b) %>
     </h2>
   </div>
 
@@ -24,7 +24,7 @@
 
       <div style="text-align:center;">
         <h3 style="margin-bottom:0.5rem;">
-          <%= @partido.seleccion_a.pais %>
+          <%= nombre_seleccion(@partido, :a) %>
         </h3>
 
         <%= f.number_field :goles_a,
@@ -39,7 +39,7 @@
 
       <div style="text-align:center;">
         <h3 style="margin-bottom:0.5rem;">
-          <%= @partido.seleccion_b.pais %>
+          <%= nombre_seleccion(@partido, :b) %>
         </h3>
 
         <%= f.number_field :goles_b,
@@ -60,7 +60,7 @@
 
         <div style="text-align:center;">
           <h3 style="margin-bottom:0.5rem;">
-            Penales <%= @partido.seleccion_a.pais %>
+            Penales <%= nombre_seleccion(@partido, :a) %>
           </h3>
 
           <%= f.number_field :penales_a,
@@ -75,7 +75,7 @@
 
         <div style="text-align:center;">
           <h3 style="margin-bottom:0.5rem;">
-            Penales <%= @partido.seleccion_b.pais %>
+            Penales <%= nombre_seleccion(@partido, :b) %>
           </h3>
 
           <%= f.number_field :penales_b,

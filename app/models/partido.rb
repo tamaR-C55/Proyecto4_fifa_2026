@@ -118,6 +118,10 @@ class Partido < ApplicationRecord
     true
   end
 
+  def self.reiniciar_eliminatoria!
+    eliminatoria.destroy_all
+  end
+
   def self.avanzar_desde(partido)
     return unless partido.eliminatoria?
 
